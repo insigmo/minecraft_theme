@@ -1,0 +1,82 @@
+<scheme name="Minecraft Dark" version="142" parent_scheme="Darcula">
+  <option name="LINE_SPACING" value="1.1" />
+
+    <!-- Шрифт редактора -->
+    <option name="EDITOR_FONT_NAME" value="Miracode" />
+    <option name="EDITOR_FONT_SIZE" value="14" />
+
+    <!-- Шрифт консоли (тот же) -->
+    <option name="CONSOLE_FONT_NAME" value="Miracode" />
+    <option name="CONSOLE_FONT_SIZE" value="14" />
+
+  <colors>
+    <option name="CARET_ROW_COLOR" value="252525" />
+    <option name="GUTTER_BACKGROUND" value="1a1a1a" />
+    <option name="LINE_NUMBERS_COLOR" value="7a7a7a" />
+    <option name="RIGHT_MARGIN_COLOR" value="2a2a2a" />
+    <option name="SELECTION_BACKGROUND" value="5e8c3a" />
+    <option name="SELECTION_FOREGROUND" value="ffffff" />
+    <option name="WHITESPACES" value="2a2a2a" />
+  </colors>
+  <attributes>
+    <option name="DEFAULT_TEXT">
+      <value>
+        <option name="FOREGROUND" value="d7d7d7" />
+        <option name="BACKGROUND" value="1e1e1e" />
+      </value>
+    </option>
+    <option name="KEYWORD">
+      <value>
+        <option name="FOREGROUND" value="7bc96f" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="STRING">
+      <value>
+        <option name="FOREGROUND" value="c7a94b" />
+      </value>
+    </option>
+    <option name="NUMBER">
+      <value>
+        <option name="FOREGROUND" value="4b7bb2" />
+      </value>
+    </option>
+    <option name="LINE_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="7a7a7a" />
+      </value>
+    </option>
+    <option name="BLOCK_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="7a7a7a" />
+      </value>
+    </option>
+    <option name="DOC_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="86b84d" />
+      </value>
+    </option>
+    <option name="CLASS_NAME">
+      <value>
+        <option name="FOREGROUND" value="9be68f" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="FUNCTION_DECLARATION">
+      <value>
+        <option name="FOREGROUND" value="9be68f" />
+      </value>
+    </option>
+    <option name="PARAMETER">
+      <value>
+        <option name="FOREGROUND" value="d7d7d7" />
+      </value>
+    </option>
+    <option name="LOCAL_VARIABLE">
+      <value>
+        <option name="FOREGROUND" value="d7d7d7" />
+      </value>
+    </option>
+  </attributes>
+</scheme>
+

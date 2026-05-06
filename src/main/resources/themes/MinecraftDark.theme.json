@@ -1,0 +1,44 @@
+{
+  "name": "Minecraft Dark",
+  "author": "Minecraft JetBrains Theme",
+  "dark": true,
+  "ui": {
+    "Panel.background": "#252525",
+    "Tree.background": "#252525",
+    "ToolWindow.background": "#252525",
+    "TextField.background": "#252525",
+    "TextField.foreground": "#E6E6E6",
+    "TextField.inactiveBackground": "#282828",
+    "TextField.selectionBackground": "#5E8C3A",
+    "TextField.selectionForeground": "#FFFFFF",
+
+    "Button.startBackground": "#4C7F2B",
+    "Button.endBackground": "#3E6A22",
+    "Button.startBorderColor": "#86B84D",
+    "Button.endBorderColor": "#2D4E18",
+    "Button.foreground": "#FFFFFF",
+
+    "Label.foreground": "#E0E0E0",
+    "Label.infoForeground": "#A7C88A",
+
+    "Link.activeForeground": "#7BC96F",
+    "Link.hoverForeground": "#9BE68F",
+    "Link.visitedForeground": "#66B35D",
+
+    "Selection.background": "#5E8C3A",
+    "Selection.foreground": "#FFFFFF",
+
+    "ProgressBar.trackColor": "#3A3A3A",
+    "ProgressBar.progressColor": "#5E8C3A",
+
+    "StatusBar.background": "#1e1e1e",
+    "StatusBar.foreground": "#E0E0E0",
+
+    "Notification.background": "#252525",
+    "Notification.foreground": "#E6E6E6",
+    "Notification.errorBackground": "#5A1F1F",
+    "Notification.warningBackground": "#5A4A1F",
+    "Notification.infoBackground": "#1F3A5A"
+  }
+}
+

@@ -1,0 +1,7 @@
+.git
+.idea
+build
+dist
+.gradle
+**/.DS_Store
+

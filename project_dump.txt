@@ -1,0 +1,1237 @@
+================================================================================
+PROJECT DUMP: /Users/user27/.cursor/projects/empty-window/minecraft-jetbrains-theme
+================================================================================
+
+FILE TREE:
+--------------------------------------------------------------------------------
+  .DS_Store  [SKIP: ignored filename]
+  .dockerignore
+  Dockerfile
+  PUBLISHING.md
+  README.md
+  TESTING.md
+  Taskfile.yml
+  build.gradle.kts
+  docker-compose.yml
+  gradle.properties
+  project_dump.txt  [SKIP: ignored filename]
+  project_dumper.py
+  settings.gradle.kts
+  src/.DS_Store  [SKIP: ignored filename]
+  src/main/.DS_Store  [SKIP: ignored filename]
+  src/main/kotlin/dev/minecraft/jetbrains/Constants.kt
+  src/main/kotlin/dev/minecraft/jetbrains/FontLoader.kt
+  src/main/kotlin/dev/minecraft/jetbrains/audio/AudioEvent.kt
+  src/main/kotlin/dev/minecraft/jetbrains/audio/AudioService.kt
+  src/main/kotlin/dev/minecraft/jetbrains/audio/AudioSettingsState.kt
+  src/main/kotlin/dev/minecraft/jetbrains/listeners/RunDebugSoundListener.kt
+  src/main/kotlin/dev/minecraft/jetbrains/listeners/TabSoundListener.kt
+  src/main/kotlin/dev/minecraft/jetbrains/settings/MinecraftAudioConfigurable.kt
+  src/main/kotlin/dev/minecraft/jetbrains/statusbar/MuteStatusBarWidgetFactory.kt
+  src/main/resources/.DS_Store  [SKIP: ignored filename]
+  src/main/resources/META-INF/plugin.xml
+  src/main/resources/audio/.DS_Store  [SKIP: ignored filename]
+  src/main/resources/audio/README.md
+  src/main/resources/audio/music/.gitkeep
+  src/main/resources/audio/music/background.wav  [SKIP: ignored extension (.wav)]
+  src/main/resources/audio/sfx/.gitkeep
+  src/main/resources/audio/sfx/background.wav  [SKIP: ignored extension (.wav)]
+  src/main/resources/audio/sfx/debug-start.wav  [SKIP: ignored extension (.wav)]
+  src/main/resources/audio/sfx/debug-stop.wav  [SKIP: ignored extension (.wav)]
+  src/main/resources/audio/sfx/error.wav  [SKIP: ignored extension (.wav)]
+  src/main/resources/audio/sfx/run-start.wav  [SKIP: ignored extension (.wav)]
+  src/main/resources/audio/sfx/run-stop.wav  [SKIP: ignored extension (.wav)]
+  src/main/resources/audio/sfx/tab-switch.wav  [SKIP: ignored extension (.wav)]
+  src/main/resources/audio/sfx/tab_switch.wav  [SKIP: ignored extension (.wav)]
+  src/main/resources/editor/MinecraftDark.icls
+  src/main/resources/fonts/Miracode.ttf  [SKIP: ignored extension (.ttf)]
+  src/main/resources/themes/MinecraftDark.theme.json
+
+================================================================================
+
+
+================================================================================
+FILE: .dockerignore
+LINES: 8 | SIZE: 44 bytes
+================================================================================
+.git
+.idea
+build
+dist
+.gradle
+**/.DS_Store
+
+
+================================================================================
+FILE: Dockerfile
+LINES: 10 | SIZE: 325 bytes
+================================================================================
+FROM gradle:jdk21
+
+WORKDIR /workspace
+
+COPY . .
+
+# Build plugin and copy artifact to mounted output volume.
+CMD ["bash", "-lc", "set -euo pipefail; gradle --no-daemon clean buildPlugin; ls -la build/distributions; mkdir -p /out; artifact=$(ls -1 build/distributions/*.zip | head -n 1); cp \"$artifact\" /out/; ls -la /out"]
+
+
+================================================================================
+FILE: PUBLISHING.md
+LINES: 20 | SIZE: 512 bytes
+================================================================================
+# Packaging and Publishing
+
+## Build Artifact
+
+1. Ensure Gradle is installed.
+2. Generate wrapper once:
+   - `gradle wrapper`
+3. Build plugin:
+   - `./gradlew buildPlugin`
+4. Zip output:
+   - `build/distributions/*.zip`
+
+## Marketplace Preparation
+
+- Verify `id`, `name`, `description`, and vendor fields in `src/main/resources/META-INF/plugin.xml`.
+- Add screenshots and feature list in Marketplace listing.
+- Mention required audio files and fallback behavior.
+- Upload plugin zip from `build/distributions`.
+
+
+================================================================================
+FILE: README.md
+LINES: 66 | SIZE: 1877 bytes
+================================================================================
+# Minecraft Theme & Sounds Plugin
+
+JetBrains plugin that delivers:
+- Minecraft-inspired dark UI + editor color scheme
+- SFX for tab switches and Run/Debug start/stop events
+- Background music loop
+- Status bar mute toggle (`MC: On` / `MC: Muted`)
+- Settings page for volume and feature toggles
+
+## Features
+
+- Theme file: `src/main/resources/themes/MinecraftDark.theme.json`
+- Editor scheme: `src/main/resources/editor/MinecraftDark.icls`
+- Listeners:
+  - `FileEditorManagerListener` for tab switch sounds
+  - `ExecutionListener` for Run/Debug sounds
+- Audio engine:
+  - App-level persistent settings (`minecraft-audio.xml`)
+  - WAV playback via `javax.sound.sampled`
+  - Fallback to system beep when SFX files are absent
+
+## Audio Files
+
+Put your own WAV files into:
+- `src/main/resources/audio/sfx/tab-switch.wav`
+- `src/main/resources/audio/sfx/run-start.wav`
+- `src/main/resources/audio/sfx/debug-start.wav`
+- `src/main/resources/audio/sfx/run-stop.wav`
+- `src/main/resources/audio/sfx/debug-stop.wav`
+- `src/main/resources/audio/sfx/error.wav`
+- `src/main/resources/audio/music/background.wav`
+
+## Build
+
+This repository currently does not include a Gradle wrapper. To build:
+1. Install Gradle locally.
+2. Run `gradle wrapper`.
+3. Run `./gradlew buildPlugin`.
+
+The plugin zip will be generated under `build/distributions/`.
+
+## Build With Docker (One Command)
+
+Run:
+
+`docker compose up --build plugin-builder`
+
+What happens:
+- Container builds the plugin with Gradle.
+- Result zip is copied into `./dist` on your machine.
+- Container exits after completion.
+- Build image uses `gradle:jdk21` (tracks the latest Gradle release with JDK 21).
+
+## Build With Task
+
+If you use [Task](https://taskfile.dev), run:
+
+`task build`
+
+It runs the same Docker-based build and writes zip artifacts to `./dist`.
+
+If `./dist` is empty, inspect logs:
+
+`docker compose logs plugin-builder`
+
+
+================================================================================
+FILE: TESTING.md
+LINES: 34 | SIZE: 874 bytes
+================================================================================
+# Test Matrix
+
+## IDE Coverage
+
+- IntelliJ IDEA 2025.3+
+- PyCharm 2025.3+
+- WebStorm 2025.3+
+
+## Functional Checks
+
+1. Install plugin from disk.
+2. Select `Minecraft Dark` theme.
+3. Open multiple files and switch tabs rapidly:
+   - Expected: short click SFX (or beep fallback if WAV is missing).
+4. Start a Run configuration:
+   - Expected: Run start SFX.
+5. Stop/finish Run:
+   - Expected: Run stop SFX.
+6. Start Debug:
+   - Expected: Debug start SFX.
+7. Stop Debug:
+   - Expected: Debug stop SFX.
+8. Verify status bar widget:
+   - `MC: On` toggles to `MC: Muted` on click and back.
+9. Open Settings > `Minecraft Theme Audio`:
+   - Toggle SFX/music options and volume sliders.
+   - Apply and verify behavior changes without restart.
+
+## Notes
+
+- When `audio/*.wav` files are absent, SFX fallback is a system beep.
+- Background music requires `audio/music/background.wav`.
+
+
+================================================================================
+FILE: Taskfile.yml
+LINES: 9 | SIZE: 166 bytes
+================================================================================
+version: "3"
+
+tasks:
+  build:
+    desc: Build plugin via Docker and export zip to ./dist
+    cmds:
+      - docker compose up --build --force-recreate plugin-builder
+
+
+================================================================================
+FILE: build.gradle.kts
+LINES: 40 | SIZE: 789 bytes
+================================================================================
+import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
+
+plugins {
+    kotlin("jvm") version "2.1.21"
+    id("org.jetbrains.intellij.platform") version "2.13.0"
+}
+
+group = providers.gradleProperty("pluginGroup").get()
+version = providers.gradleProperty("pluginVersion").get()
+
+repositories {
+    mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
+}
+
+dependencies {
+    intellijPlatform {
+        intellijIdea("2025.1")
+    }
+}
+
+intellijPlatform {
+    pluginConfiguration {
+        name = providers.gradleProperty("pluginName").get()
+        version = providers.gradleProperty("pluginVersion").get()
+
+        ideaVersion {
+            sinceBuild = "251"
+            untilBuild = provider { null }
+        }
+    }
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+
+================================================================================
+FILE: docker-compose.yml
+LINES: 12 | SIZE: 208 bytes
+================================================================================
+services:
+  plugin-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minecraft-jetbrains-plugin-builder
+    user: "0:0"
+    volumes:
+      - ./dist:/out
+    restart: "no"
+
+
+================================================================================
+FILE: gradle.properties
+LINES: 8 | SIZE: 169 bytes
+================================================================================
+kotlin.code.style=official
+org.gradle.jvmargs=-Xmx2g -Dfile.encoding=UTF-8
+
+pluginGroup=dev.minecraft.jetbrains
+pluginName=Minecraft Theme & Sounds
+pluginVersion=0.1.0
+
+
+================================================================================
+FILE: project_dumper.py
+LINES: 169 | SIZE: 5514 bytes
+================================================================================
+#!/usr/bin/env python3
+"""
+Скрипт для сбора содержимого всех файлов проекта в один файл.
+Использование: python dump_project.py [output_file]
+По умолчанию результат записывается в project_dump.txt
+"""
+
+import os
+import sys
+from pathlib import Path
+
+# Директории, которые следует игнорировать
+IGNORED_DIRS = {
+    '.git', '.idea', '.vscode', '__pycache__', 'node_modules',
+    'vendor', 'dist', 'target', '.gradle', '.mvn',
+    'venv', '.venv', 'env', '.env', 'bin', 'obj',
+    '.next', '.nuxt', 'coverage', '.pytest_cache', '.mypy_cache',
+    '.tox', 'htmlcov', '.cache', 'tmp', 'temp',
+}
+
+# Расширения файлов, которые следует игнорировать (бинарные и сгенерированные)
+IGNORED_EXTENSIONS = {
+    # Бинарные
+    '.exe', '.dll', '.so', '.dylib', '.a', '.o', '.obj', '.lib',
+    '.class', '.jar', '.war', '.ear', '.pyc', '.pyo',
+    # Изображения
+    '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.ico', '.svg', '.webp',
+    '.tiff', '.tif', '.raw', '.psd',
+    # Видео и аудио
+    '.mp4', '.avi', '.mov', '.mkv', '.webm', '.mp3', '.wav', '.flac', '.ogg',
+    # Архивы
+    '.zip', '.tar', '.gz', '.bz2', '.xz', '.7z', '.rar',
+    # Документы
+    '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
+    # Шрифты
+    '.ttf', '.otf', '.woff', '.woff2', '.eot',
+    # Прочее
+    '.db', '.sqlite', '.sqlite3', '.lock',
+    '.DS_Store',
+}
+
+# Конкретные файлы, которые следует игнорировать
+IGNORED_FILES = {
+    '.DS_Store', 'Thumbs.db', 'go.sum', 'package-lock.json',
+    'yarn.lock', 'pnpm-lock.yaml', 'Cargo.lock', 'poetry.lock', 'project_dump.txt',
+}
+
+# Максимальный размер файла в байтах (1 МБ)
+MAX_FILE_SIZE = 1024 * 1024
+
+
+def should_skip_dir(dirname: str) -> bool:
+    return dirname in IGNORED_DIRS or dirname.startswith('.')
+
+
+def should_skip_file(filepath: Path) -> tuple[bool, str]:
+    if filepath.name in IGNORED_FILES:
+        return True, "ignored filename"
+    if filepath.suffix.lower() in IGNORED_EXTENSIONS:
+        return True, f"ignored extension ({filepath.suffix})"
+    try:
+        size = filepath.stat().st_size
+        if size > MAX_FILE_SIZE:
+            return True, f"too large ({size} bytes)"
+    except OSError as e:
+        return True, f"stat error: {e}"
+    return False, ""
+
+
+def is_binary(filepath: Path) -> bool:
+    """Проверка, является ли файл бинарным (по наличию нулевых байтов)."""
+    try:
+        with open(filepath, 'rb') as f:
+            chunk = f.read(8192)
+            return b'\x00' in chunk
+    except OSError:
+        return True
+
+
+def dump_project(root: Path, output: Path) -> None:
+    total_files = 0
+    skipped_files = 0
+    total_bytes = 0
+
+    with open(output, 'w', encoding='utf-8') as out:
+        # Заголовок с деревом проекта
+        out.write("=" * 80 + "\n")
+        out.write(f"PROJECT DUMP: {root.resolve()}\n")
+        out.write("=" * 80 + "\n\n")
+
+        # Сбор всех файлов
+        all_files = []
+        for dirpath, dirnames, filenames in os.walk(root):
+            # Фильтрация директорий на месте
+            dirnames[:] = [d for d in dirnames if not should_skip_dir(d)]
+            for filename in filenames:
+                all_files.append(Path(dirpath) / filename)
+
+        all_files.sort()
+
+        # Сначала вывод дерева файлов
+        out.write("FILE TREE:\n")
+        out.write("-" * 80 + "\n")
+        for f in all_files:
+            rel = f.relative_to(root)
+            skip, reason = should_skip_file(f)
+            marker = f"  [SKIP: {reason}]" if skip else ""
+            out.write(f"  {rel}{marker}\n")
+        out.write("\n" + "=" * 80 + "\n\n")
+
+        # Затем содержимое файлов
+        for filepath in all_files:
+            rel = filepath.relative_to(root)
+            skip, reason = should_skip_file(filepath)
+            if skip:
+                skipped_files += 1
+                continue
+
+            if is_binary(filepath):
+                skipped_files += 1
+                out.write(f"\n{'=' * 80}\n")
+                out.write(f"FILE: {rel} [BINARY - SKIPPED]\n")
+                out.write(f"{'=' * 80}\n")
+                continue
+
+            try:
+                with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
+                    content = f.read()
+            except OSError as e:
+                out.write(f"\n{'=' * 80}\n")
+                out.write(f"FILE: {rel} [ERROR: {e}]\n")
+                out.write(f"{'=' * 80}\n")
+                skipped_files += 1
+                continue
+
+            line_count = content.count('\n') + 1
+            out.write(f"\n{'=' * 80}\n")
+            out.write(f"FILE: {rel}\n")
+            out.write(f"LINES: {line_count} | SIZE: {len(content)} bytes\n")
+            out.write(f"{'=' * 80}\n")
+            out.write(content)
+            if not content.endswith('\n'):
+                out.write('\n')
+
+            total_files += 1
+            total_bytes += len(content)
+
+        # Итоговая статистика
+        out.write(f"\n{'=' * 80}\n")
+        out.write("SUMMARY\n")
+        out.write(f"{'=' * 80}\n")
+        out.write(f"Total files dumped: {total_files}\n")
+        out.write(f"Total files skipped: {skipped_files}\n")
+        out.write(f"Total bytes: {total_bytes}\n")
+
+    print(f"✓ Dump saved to: {output}")
+    print(f"  Files dumped:  {total_files}")
+    print(f"  Files skipped: {skipped_files}")
+    print(f"  Total size:    {total_bytes} bytes")
+
+
+def main() -> None:
+    root = Path('.')
+    output = Path(sys.argv[1]) if len(sys.argv) > 1 else Path('project_dump.txt')
+    dump_project(root, output)
+
+
+if __name__ == '__main__':
+    main()
+
+================================================================================
+FILE: settings.gradle.kts
+LINES: 3 | SIZE: 48 bytes
+================================================================================
+rootProject.name = "minecraft-jetbrains-theme"
+
+
+================================================================================
+FILE: src/main/kotlin/dev/minecraft/jetbrains/Constants.kt
+LINES: 16 | SIZE: 688 bytes
+================================================================================
+package dev.minecraft.jetbrains
+
+object Constants {
+    const val PLUGIN_ID: String = "dev.minecraft.jetbrains.minecraft-theme"
+    const val STATUSBAR_WIDGET_ID: String = "dev.minecraft.jetbrains.minecraft-theme.mute"
+
+    const val TAB_SWITCH_SOUND: String = "/audio/sfx/tab-switch.wav"
+    const val RUN_START_SOUND: String = "/audio/sfx/run-start.wav"
+    const val DEBUG_START_SOUND: String = "/audio/sfx/debug-start.wav"
+    const val RUN_STOP_SOUND: String = "/audio/sfx/run-stop.wav"
+    const val DEBUG_STOP_SOUND: String = "/audio/sfx/debug-stop.wav"
+    const val ERROR_SOUND: String = "/audio/sfx/error.wav"
+    const val MUSIC_LOOP: String = "/audio/music/background.wav"
+}
+
+
+================================================================================
+FILE: src/main/kotlin/dev/minecraft/jetbrains/FontLoader.kt
+LINES: 39 | SIZE: 1140 bytes
+================================================================================
+// src/main/kotlin/dev/minecraft/jetbrains/FontLoader.kt
+package dev.minecraft.jetbrains
+
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.diagnostic.logger
+import java.awt.Font
+import java.awt.GraphicsEnvironment
+
+@Service(Service.Level.APP)
+class FontLoader {
+
+    private val log = logger<FontLoader>()
+
+    init {
+        loadFont()
+    }
+
+    private fun loadFont() {
+        try {
+            val stream = javaClass.getResourceAsStream("/fonts/Miracode.ttf")
+                ?: run { log.warn("Miracode.ttf not found in resources"); return }
+
+            val font = Font.createFont(Font.TRUETYPE_FONT, stream)
+            val ge = GraphicsEnvironment.getLocalGraphicsEnvironment()
+            ge.registerFont(font)
+
+            log.info("Miracode font registered successfully")
+        } catch (e: Exception) {
+            log.warn("Failed to register Miracode font", e)
+        }
+    }
+
+    companion object {
+        fun getInstance(): FontLoader =
+            com.intellij.openapi.application.ApplicationManager
+                .getApplication()
+                .getService(FontLoader::class.java)
+    }
+}
+
+================================================================================
+FILE: src/main/kotlin/dev/minecraft/jetbrains/audio/AudioEvent.kt
+LINES: 12 | SIZE: 149 bytes
+================================================================================
+package dev.minecraft.jetbrains.audio
+
+enum class AudioEvent {
+    TabSwitch,
+    RunStart,
+    DebugStart,
+    RunStop,
+    DebugStop,
+    Error
+}
+
+
+================================================================================
+FILE: src/main/kotlin/dev/minecraft/jetbrains/audio/AudioService.kt
+LINES: 158 | SIZE: 4923 bytes
+================================================================================
+package dev.minecraft.jetbrains.audio
+
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.Service
+import dev.minecraft.jetbrains.Constants
+import java.awt.Toolkit
+import java.util.concurrent.CopyOnWriteArrayList
+import javax.sound.sampled.AudioSystem
+import javax.sound.sampled.Clip
+import javax.sound.sampled.FloatControl
+
+@Service(Service.Level.APP)
+class AudioService : Disposable {
+    private val settings: AudioSettingsState = AudioSettingsState.getInstance()
+    private val muteListeners = CopyOnWriteArrayList<(Boolean) -> Unit>()
+    private var musicClip: Clip? = null
+
+    init {
+        restartMusicIfNeeded()
+    }
+
+    fun isMuted(): Boolean = settings.state.muted
+
+    fun setMuted(muted: Boolean) {
+        settings.state.muted = muted
+        if (muted) {
+            stopMusic()
+        } else {
+            restartMusicIfNeeded()
+        }
+        muteListeners.forEach { it(muted) }
+    }
+
+    fun toggleMuted(): Boolean {
+        val next = !isMuted()
+        setMuted(next)
+        return next
+    }
+
+    fun addMuteListener(listener: (Boolean) -> Unit) {
+        muteListeners.add(listener)
+    }
+
+    fun removeMuteListener(listener: (Boolean) -> Unit) {
+        muteListeners.remove(listener)
+    }
+
+    fun playEvent(event: AudioEvent) {
+        if (settings.state.muted || !settings.state.soundEnabled) return
+
+        val path = when (event) {
+            AudioEvent.TabSwitch -> {
+                if (!settings.state.tabSwitchSoundEnabled) return
+                Constants.TAB_SWITCH_SOUND
+            }
+            AudioEvent.RunStart -> {
+                if (!settings.state.runDebugSoundsEnabled) return
+                Constants.RUN_START_SOUND
+            }
+            AudioEvent.DebugStart -> {
+                if (!settings.state.runDebugSoundsEnabled) return
+                Constants.DEBUG_START_SOUND
+            }
+            AudioEvent.RunStop -> {
+                if (!settings.state.runDebugSoundsEnabled) return
+                Constants.RUN_STOP_SOUND
+            }
+            AudioEvent.DebugStop -> {
+                if (!settings.state.runDebugSoundsEnabled) return
+                Constants.DEBUG_STOP_SOUND
+            }
+            AudioEvent.Error -> Constants.ERROR_SOUND
+        }
+
+        playOnce(path, settings.state.soundVolume)
+    }
+
+    fun restartMusicIfNeeded() {
+        stopMusic()
+        if (settings.state.muted || !settings.state.musicEnabled) return
+        val musicResource = findFirstAvailableMusicResource() ?: return
+        musicClip = openClip(musicResource, settings.state.musicVolume)?.also { clip ->
+            clip.loop(Clip.LOOP_CONTINUOUSLY)
+            clip.start()
+        }
+    }
+
+    fun stopMusic() {
+        musicClip?.let { clip ->
+            runCatching {
+                clip.stop()
+                clip.close()
+            }
+        }
+        musicClip = null
+    }
+
+    private fun playOnce(resourcePath: String, volumePercent: Int) {
+        ApplicationManager.getApplication().executeOnPooledThread {
+            val clip = openClip(resourcePath, volumePercent)
+            if (clip == null) {
+                runCatching { Toolkit.getDefaultToolkit().beep() }
+                return@executeOnPooledThread
+            }
+            runCatching {
+                clip.addLineListener { event ->
+                    if (event.type.toString() == "STOP") {
+                        clip.close()
+                    }
+                }
+                clip.start()
+            }.onFailure {
+                runCatching { clip.close() }
+            }
+        }
+    }
+
+    private fun openClip(resourcePath: String, volumePercent: Int): Clip? {
+        val url = javaClass.getResource(resourcePath) ?: return null
+        return runCatching {
+            AudioSystem.getAudioInputStream(url).use { input ->
+                val clip = AudioSystem.getClip()
+                clip.open(input)
+                setClipVolume(clip, volumePercent)
+                clip
+            }
+        }.getOrNull()
+    }
+
+    private fun findFirstAvailableMusicResource(): String? {
+        val candidates = listOf(
+            Constants.MUSIC_LOOP,
+            Constants.TAB_SWITCH_SOUND
+        )
+        return candidates.firstOrNull { javaClass.getResource(it) != null }
+    }
+
+    private fun setClipVolume(clip: Clip, volumePercent: Int) {
+        val gain = clip.getControl(FloatControl.Type.MASTER_GAIN) as? FloatControl ?: return
+        val clamped = volumePercent.coerceIn(0, 100)
+        val min = gain.minimum
+        val max = gain.maximum
+        val value = min + (max - min) * (clamped / 100.0f)
+        gain.value = value
+    }
+
+    override fun dispose() {
+        stopMusic()
+    }
+
+    companion object {
+        fun getInstance(): AudioService =
+            ApplicationManager.getApplication().getService(AudioService::class.java)
+    }
+}
+
+
+================================================================================
+FILE: src/main/kotlin/dev/minecraft/jetbrains/audio/AudioSettingsState.kt
+LINES: 36 | SIZE: 1147 bytes
+================================================================================
+package dev.minecraft.jetbrains.audio
+
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.State
+import com.intellij.openapi.components.Storage
+
+@State(name = "MinecraftAudioSettings", storages = [Storage("minecraft-audio.xml")])
+@Service(Service.Level.APP)
+class AudioSettingsState : PersistentStateComponent<AudioSettingsState.State> {
+    data class State(
+        var muted: Boolean = false,
+        var soundEnabled: Boolean = true,
+        var musicEnabled: Boolean = true,
+        var runDebugSoundsEnabled: Boolean = true,
+        var tabSwitchSoundEnabled: Boolean = true,
+        var soundVolume: Int = 70,
+        var musicVolume: Int = 40
+    )
+
+    private var state: State = State()
+
+    override fun getState(): State = state
+
+    override fun loadState(state: State) {
+        this.state = state
+    }
+
+    companion object {
+        fun getInstance(): AudioSettingsState =
+            ApplicationManager.getApplication().getService(AudioSettingsState::class.java)
+    }
+}
+
+
+================================================================================
+FILE: src/main/kotlin/dev/minecraft/jetbrains/listeners/RunDebugSoundListener.kt
+LINES: 49 | SIZE: 1536 bytes
+================================================================================
+package dev.minecraft.jetbrains.listeners
+
+import com.intellij.execution.ExecutionListener
+import com.intellij.execution.process.ProcessHandler
+import com.intellij.execution.runners.ExecutionEnvironment
+import dev.minecraft.jetbrains.audio.AudioEvent
+import dev.minecraft.jetbrains.audio.AudioService
+
+class RunDebugSoundListener : ExecutionListener {
+    override fun processStarted(
+        executorId: String,
+        env: ExecutionEnvironment,
+        handler: ProcessHandler
+    ) {
+        val audioService = AudioService.getInstance()
+        if (isDebug(executorId)) {
+            audioService.playEvent(AudioEvent.DebugStart)
+        } else {
+            audioService.playEvent(AudioEvent.RunStart)
+        }
+    }
+
+    override fun processTerminated(
+        executorId: String,
+        env: ExecutionEnvironment,
+        handler: ProcessHandler,
+        exitCode: Int
+    ) {
+        val audioService = AudioService.getInstance()
+        if (isDebug(executorId)) {
+            audioService.playEvent(AudioEvent.DebugStop)
+        } else {
+            audioService.playEvent(AudioEvent.RunStop)
+        }
+        if (exitCode != 0) {
+            audioService.playEvent(AudioEvent.Error)
+        }
+    }
+
+    override fun processNotStarted(executorId: String, env: ExecutionEnvironment) {
+        AudioService.getInstance().playEvent(AudioEvent.Error)
+    }
+
+    private fun isDebug(executorId: String): Boolean =
+        executorId.equals("Debug", ignoreCase = true) ||
+            executorId.lowercase().contains("debug")
+}
+
+
+================================================================================
+FILE: src/main/kotlin/dev/minecraft/jetbrains/listeners/TabSoundListener.kt
+LINES: 24 | SIZE: 840 bytes
+================================================================================
+package dev.minecraft.jetbrains.listeners
+
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent
+import com.intellij.openapi.fileEditor.FileEditorManagerListener
+import dev.minecraft.jetbrains.audio.AudioEvent
+import dev.minecraft.jetbrains.audio.AudioService
+import java.util.concurrent.atomic.AtomicLong
+
+class TabSoundListener : FileEditorManagerListener {
+    private val lastPlayedAt = AtomicLong(0L)
+
+    override fun selectionChanged(event: FileEditorManagerEvent) {
+        if (event.oldFile == null || event.newFile == null || event.oldFile == event.newFile) return
+
+        val now = System.currentTimeMillis()
+        val prev = lastPlayedAt.get()
+        if (now - prev < 120) return
+        if (!lastPlayedAt.compareAndSet(prev, now)) return
+
+        AudioService.getInstance().playEvent(AudioEvent.TabSwitch)
+    }
+}
+
+
+================================================================================
+FILE: src/main/kotlin/dev/minecraft/jetbrains/settings/MinecraftAudioConfigurable.kt
+LINES: 107 | SIZE: 3973 bytes
+================================================================================
+package dev.minecraft.jetbrains.settings
+
+import com.intellij.openapi.options.Configurable
+import dev.minecraft.jetbrains.audio.AudioService
+import dev.minecraft.jetbrains.audio.AudioSettingsState
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import javax.swing.JCheckBox
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JSlider
+
+class MinecraftAudioConfigurable : Configurable {
+    private var panel: JPanel? = null
+    private lateinit var muted: JCheckBox
+    private lateinit var sfxEnabled: JCheckBox
+    private lateinit var musicEnabled: JCheckBox
+    private lateinit var runDebugEnabled: JCheckBox
+    private lateinit var tabSoundEnabled: JCheckBox
+    private lateinit var sfxVolume: JSlider
+    private lateinit var musicVolume: JSlider
+
+    override fun getDisplayName(): String = "Minecraft Theme Audio"
+
+    override fun createComponent(): JComponent {
+        val settings = AudioSettingsState.getInstance().state
+        panel = JPanel(GridBagLayout())
+        var row = 0
+
+        muted = JCheckBox("Mute all plugin audio", settings.muted)
+        sfxEnabled = JCheckBox("Enable sound effects", settings.soundEnabled)
+        musicEnabled = JCheckBox("Enable background music", settings.musicEnabled)
+        runDebugEnabled = JCheckBox("Enable Run/Debug sounds", settings.runDebugSoundsEnabled)
+        tabSoundEnabled = JCheckBox("Enable tab switch sound", settings.tabSwitchSoundEnabled)
+        sfxVolume = JSlider(0, 100, settings.soundVolume)
+        musicVolume = JSlider(0, 100, settings.musicVolume)
+
+        addRow(muted, row++)
+        addRow(sfxEnabled, row++)
+        addRow(musicEnabled, row++)
+        addRow(runDebugEnabled, row++)
+        addRow(tabSoundEnabled, row++)
+        addRow(JLabel("SFX volume"), row++)
+        addRow(sfxVolume, row++)
+        addRow(JLabel("Music volume"), row++)
+        addRow(musicVolume, row)
+
+        return panel!!
+    }
+
+    override fun isModified(): Boolean {
+        val state = AudioSettingsState.getInstance().state
+        return muted.isSelected != state.muted ||
+            sfxEnabled.isSelected != state.soundEnabled ||
+            musicEnabled.isSelected != state.musicEnabled ||
+            runDebugEnabled.isSelected != state.runDebugSoundsEnabled ||
+            tabSoundEnabled.isSelected != state.tabSwitchSoundEnabled ||
+            sfxVolume.value != state.soundVolume ||
+            musicVolume.value != state.musicVolume
+    }
+
+    override fun apply() {
+        val state = AudioSettingsState.getInstance().state
+        state.muted = muted.isSelected
+        state.soundEnabled = sfxEnabled.isSelected
+        state.musicEnabled = musicEnabled.isSelected
+        state.runDebugSoundsEnabled = runDebugEnabled.isSelected
+        state.tabSwitchSoundEnabled = tabSoundEnabled.isSelected
+        state.soundVolume = sfxVolume.value
+        state.musicVolume = musicVolume.value
+
+        val audioService = AudioService.getInstance()
+        audioService.setMuted(state.muted)
+        audioService.restartMusicIfNeeded()
+    }
+
+    override fun reset() {
+        val state = AudioSettingsState.getInstance().state
+        muted.isSelected = state.muted
+        sfxEnabled.isSelected = state.soundEnabled
+        musicEnabled.isSelected = state.musicEnabled
+        runDebugEnabled.isSelected = state.runDebugSoundsEnabled
+        tabSoundEnabled.isSelected = state.tabSwitchSoundEnabled
+        sfxVolume.value = state.soundVolume
+        musicVolume.value = state.musicVolume
+    }
+
+    override fun disposeUIResources() {
+        panel = null
+    }
+
+    private fun addRow(component: JComponent, row: Int) {
+        panel?.add(
+            component,
+            GridBagConstraints().apply {
+                gridx = 0
+                gridy = row
+                weightx = 1.0
+                fill = GridBagConstraints.HORIZONTAL
+                anchor = GridBagConstraints.WEST
+            }
+        )
+    }
+}
+
+
+================================================================================
+FILE: src/main/kotlin/dev/minecraft/jetbrains/statusbar/MuteStatusBarWidgetFactory.kt
+LINES: 69 | SIZE: 2242 bytes
+================================================================================
+package dev.minecraft.jetbrains.statusbar
+
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.wm.CustomStatusBarWidget
+import com.intellij.openapi.wm.StatusBar
+import com.intellij.openapi.wm.StatusBarWidget
+import com.intellij.openapi.wm.StatusBarWidgetFactory
+import com.intellij.ui.ClickListener
+import com.intellij.ui.components.JBLabel
+import dev.minecraft.jetbrains.Constants
+import dev.minecraft.jetbrains.audio.AudioService
+import java.awt.event.MouseEvent
+import javax.swing.JComponent
+
+class MuteStatusBarWidgetFactory : StatusBarWidgetFactory {
+    override fun getId(): String = Constants.STATUSBAR_WIDGET_ID
+
+    override fun getDisplayName(): String = "Minecraft Audio Mute"
+
+    override fun isAvailable(project: Project): Boolean = true
+
+    override fun createWidget(project: Project): StatusBarWidget = MuteStatusBarWidget()
+
+    override fun disposeWidget(widget: StatusBarWidget) {
+        Disposer.dispose(widget)
+    }
+
+    override fun canBeEnabledOn(statusBar: StatusBar): Boolean = true
+}
+
+private class MuteStatusBarWidget : CustomStatusBarWidget, Disposable {
+    private val audioService = AudioService.getInstance()
+    private val label = JBLabel().apply {
+        border = com.intellij.util.ui.JBUI.Borders.empty(0, 6)
+        toolTipText = "Toggle Minecraft audio mute"
+    }
+
+    private val muteListener: (Boolean) -> Unit = { updateLabel(it) }
+
+    init {
+        updateLabel(audioService.isMuted())
+        audioService.addMuteListener(muteListener)
+        object : ClickListener() {
+            override fun onClick(event: MouseEvent, clickCount: Int): Boolean {
+                val muted = audioService.toggleMuted()
+                updateLabel(muted)
+                return true
+            }
+        }.installOn(label)
+    }
+
+    override fun ID(): String = Constants.STATUSBAR_WIDGET_ID
+
+    override fun install(statusBar: StatusBar) = Unit
+
+    override fun getComponent(): JComponent = label
+
+    private fun updateLabel(muted: Boolean) {
+        label.text = if (muted) "MC: Muted" else "MC: On"
+    }
+
+    override fun dispose() {
+        audioService.removeMuteListener(muteListener)
+    }
+}
+
+
+================================================================================
+FILE: src/main/resources/META-INF/plugin.xml
+LINES: 36 | SIZE: 1654 bytes
+================================================================================
+<idea-plugin>
+    <id>dev.minecraft.jetbrains.minecraft-theme</id>
+    <name>Minecraft Theme &amp; Sounds</name>
+    <vendor email="qwantone@gmail.com">Minecraft JetBrains Theme</vendor>
+
+    <description>
+        Minecraft-styled theme, sound effects for IDE events, and optional background music with a mute toggle in the status bar.
+    </description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <themeProvider id="dev.minecraft.jetbrains.minecraft-dark" path="themes/MinecraftDark.theme.json"/>
+        <statusBarWidgetFactory
+                implementation="dev.minecraft.jetbrains.statusbar.MuteStatusBarWidgetFactory"/>
+        <applicationConfigurable
+                displayName="Minecraft Theme Audio"
+                id="dev.minecraft.jetbrains.minecraft-theme.audio"
+                instance="dev.minecraft.jetbrains.settings.MinecraftAudioConfigurable"/>
+        <!-- Регистрируем FontLoader как app-сервис, чтобы он стартовал с плагином -->
+        <applicationService
+                serviceImplementation="dev.minecraft.jetbrains.FontLoader"
+                preload="true"/>   <!-- preload="true" — важно, запускается до открытия редактора -->
+    </extensions>
+
+    <projectListeners>
+        <listener
+                class="dev.minecraft.jetbrains.listeners.TabSoundListener"
+                topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+        <listener
+                class="dev.minecraft.jetbrains.listeners.RunDebugSoundListener"
+                topic="com.intellij.execution.ExecutionListener"/>
+    </projectListeners>
+</idea-plugin>
+
+
+================================================================================
+FILE: src/main/resources/audio/README.md
+LINES: 16 | SIZE: 460 bytes
+================================================================================
+Place your custom WAV files here.
+
+Expected files:
+- `sfx/tab-switch.wav`
+- `sfx/run-start.wav`
+- `sfx/debug-start.wav`
+- `sfx/run-stop.wav`
+- `sfx/debug-stop.wav`
+- `sfx/error.wav`
+- `music/background.wav`
+
+Current repository contains placeholder files with these names. Replace them with valid WAV audio keeping the same filenames.
+
+If files are missing or invalid, the plugin falls back to a system beep for short SFX, and background music stays disabled.
+
+
+================================================================================
+FILE: src/main/resources/audio/music/.gitkeep
+LINES: 2 | SIZE: 1 bytes
+================================================================================
+
+
+================================================================================
+FILE: src/main/resources/audio/sfx/.gitkeep
+LINES: 2 | SIZE: 1 bytes
+================================================================================
+
+
+================================================================================
+FILE: src/main/resources/editor/MinecraftDark.icls
+LINES: 83 | SIZE: 2386 bytes
+================================================================================
+<scheme name="Minecraft Dark" version="142" parent_scheme="Darcula">
+  <option name="LINE_SPACING" value="1.1" />
+
+    <!-- Шрифт редактора -->
+    <option name="EDITOR_FONT_NAME" value="Miracode" />
+    <option name="EDITOR_FONT_SIZE" value="14" />
+
+    <!-- Шрифт консоли (тот же) -->
+    <option name="CONSOLE_FONT_NAME" value="Miracode" />
+    <option name="CONSOLE_FONT_SIZE" value="14" />
+
+  <colors>
+    <option name="CARET_ROW_COLOR" value="2b2b2b" />
+    <option name="GUTTER_BACKGROUND" value="2b2b2b" />
+    <option name="LINE_NUMBERS_COLOR" value="7a7a7a" />
+    <option name="RIGHT_MARGIN_COLOR" value="3a3a3a" />
+    <option name="SELECTION_BACKGROUND" value="5e8c3a" />
+    <option name="SELECTION_FOREGROUND" value="ffffff" />
+    <option name="WHITESPACES" value="3a3a3a" />
+  </colors>
+  <attributes>
+    <option name="DEFAULT_TEXT">
+      <value>
+        <option name="FOREGROUND" value="d7d7d7" />
+        <option name="BACKGROUND" value="1e1e1e" />
+      </value>
+    </option>
+    <option name="KEYWORD">
+      <value>
+        <option name="FOREGROUND" value="7bc96f" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="STRING">
+      <value>
+        <option name="FOREGROUND" value="c7a94b" />
+      </value>
+    </option>
+    <option name="NUMBER">
+      <value>
+        <option name="FOREGROUND" value="4b7bb2" />
+      </value>
+    </option>
+    <option name="LINE_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="7a7a7a" />
+      </value>
+    </option>
+    <option name="BLOCK_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="7a7a7a" />
+      </value>
+    </option>
+    <option name="DOC_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="86b84d" />
+      </value>
+    </option>
+    <option name="CLASS_NAME">
+      <value>
+        <option name="FOREGROUND" value="9be68f" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="FUNCTION_DECLARATION">
+      <value>
+        <option name="FOREGROUND" value="9be68f" />
+      </value>
+    </option>
+    <option name="PARAMETER">
+      <value>
+        <option name="FOREGROUND" value="d7d7d7" />
+      </value>
+    </option>
+    <option name="LOCAL_VARIABLE">
+      <value>
+        <option name="FOREGROUND" value="d7d7d7" />
+      </value>
+    </option>
+  </attributes>
+</scheme>
+
+
+================================================================================
+FILE: src/main/resources/themes/MinecraftDark.theme.json
+LINES: 45 | SIZE: 1299 bytes
+================================================================================
+{
+  "name": "Minecraft Dark",
+  "author": "Minecraft JetBrains Theme",
+  "dark": true,
+  "ui": {
+    "Panel.background": "#2B2B2B",
+    "Tree.background": "#2B2B2B",
+    "ToolWindow.background": "#2B2B2B",
+    "TextField.background": "#3A3A3A",
+    "TextField.foreground": "#E6E6E6",
+    "TextField.inactiveBackground": "#333333",
+    "TextField.selectionBackground": "#5E8C3A",
+    "TextField.selectionForeground": "#FFFFFF",
+
+    "Button.startBackground": "#4C7F2B",
+    "Button.endBackground": "#3E6A22",
+    "Button.startBorderColor": "#86B84D",
+    "Button.endBorderColor": "#2D4E18",
+    "Button.foreground": "#FFFFFF",
+
+    "Label.foreground": "#E0E0E0",
+    "Label.infoForeground": "#A7C88A",
+
+    "Link.activeForeground": "#7BC96F",
+    "Link.hoverForeground": "#9BE68F",
+    "Link.visitedForeground": "#66B35D",
+
+    "Selection.background": "#5E8C3A",
+    "Selection.foreground": "#FFFFFF",
+
+    "ProgressBar.trackColor": "#3A3A3A",
+    "ProgressBar.progressColor": "#5E8C3A",
+
+    "StatusBar.background": "#2B2B2B",
+    "StatusBar.foreground": "#E0E0E0",
+
+    "Notification.background": "#2F2F2F",
+    "Notification.foreground": "#E6E6E6",
+    "Notification.errorBackground": "#5A1F1F",
+    "Notification.warningBackground": "#5A4A1F",
+    "Notification.infoBackground": "#1F3A5A"
+  }
+}
+
+
+================================================================================
+SUMMARY
+================================================================================
+Total files dumped: 26
+Total files skipped: 16
+Total bytes: 32965

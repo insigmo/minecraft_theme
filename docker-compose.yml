@@ -1,0 +1,11 @@
+services:
+  plugin-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minecraft-jetbrains-plugin-builder
+    user: "0:0"
+    volumes:
+      - ./dist:/out
+    restart: "no"
+

@@ -1,0 +1,8 @@
+version: "3"
+
+tasks:
+  build:
+    desc: Build plugin via Docker and export zip to ./dist
+    cmds:
+      - docker compose up --build --force-recreate plugin-builder
+

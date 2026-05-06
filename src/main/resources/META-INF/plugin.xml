@@ -1,0 +1,45 @@
+<idea-plugin>
+    <id>dev.minecraft.jetbrains.minecraft-theme</id>
+    <name>Minecraft Theme</name>
+    <vendor email="qwantone@gmail.com">Qwantone</vendor>
+
+    <description>
+        Minecraft-styled dark theme for JetBrains IDEs with immersive sound effects.
+
+        Features:
+        — Minecraft Dark editor color scheme and UI theme
+        — Sound effects for tab switches, Run/Debug start and stop events
+        — Background music loop
+        — Status bar mute toggle (MC On / MC Muted)
+        — Bundled Miracode font — a Minecraft-inspired monospaced font
+
+        All audio settings (volume, enable/disable SFX, music, individual events)
+        are available in Settings → Minecraft Theme Audio.
+    </description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <themeProvider id="dev.minecraft.jetbrains.minecraft-dark" path="themes/MinecraftDark.theme.json"/>
+        <statusBarWidgetFactory
+                implementation="dev.minecraft.jetbrains.statusbar.MuteStatusBarWidgetFactory"/>
+        <applicationConfigurable
+                displayName="Minecraft Theme Audio"
+                id="dev.minecraft.jetbrains.minecraft-theme.audio"
+                instance="dev.minecraft.jetbrains.settings.MinecraftAudioConfigurable"/>
+        <!-- Регистрируем FontLoader как app-сервис, чтобы он стартовал с плагином -->
+        <applicationService
+                serviceImplementation="dev.minecraft.jetbrains.FontLoader"
+                preload="true"/>   <!-- preload="true" — важно, запускается до открытия редактора -->
+    </extensions>
+
+    <projectListeners>
+        <listener
+                class="dev.minecraft.jetbrains.listeners.TabSoundListener"
+                topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+        <listener
+                class="dev.minecraft.jetbrains.listeners.RunDebugSoundListener"
+                topic="com.intellij.execution.ExecutionListener"/>
+    </projectListeners>
+</idea-plugin>
+
