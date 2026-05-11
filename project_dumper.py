@@ -8,7 +8,7 @@
 import os
 import sys
 from pathlib import Path
-
+from builtins import *
 # Директории, которые следует игнорировать
 IGNORED_DIRS = {
     '.git', '.idea', '.vscode', '__pycache__', 'node_modules',
@@ -42,11 +42,9 @@ IGNORED_EXTENSIONS = {
 # Конкретные файлы, которые следует игнорировать
 IGNORED_FILES = {
     '.DS_Store', 'Thumbs.db', 'go.sum', 'package-lock.json',
-    'yarn.lock', 'pnpm-lock.yaml', 'Cargo.lock', 'poetry.lock', 'project_dump.txt',
+    'yarn.lock', 'pnpm-lock.yaml', 'Cargo.lock', 'poetry.lock',
+    "project_dumper.py", "project_dump.txt",
 }
-
-# Максимальный размер файла в байтах (1 МБ)
-MAX_FILE_SIZE = 1024 * 1024
 
 
 def should_skip_dir(dirname: str) -> bool:
@@ -58,12 +56,6 @@ def should_skip_file(filepath: Path) -> tuple[bool, str]:
         return True, "ignored filename"
     if filepath.suffix.lower() in IGNORED_EXTENSIONS:
         return True, f"ignored extension ({filepath.suffix})"
-    try:
-        size = filepath.stat().st_size
-        if size > MAX_FILE_SIZE:
-            return True, f"too large ({size} bytes)"
-    except OSError as e:
-        return True, f"stat error: {e}"
     return False, ""
 
 
@@ -71,7 +63,7 @@ def is_binary(filepath: Path) -> bool:
     """Проверка, является ли файл бинарным (по наличию нулевых байтов)."""
     try:
         with open(filepath, 'rb') as f:
-            chunk = f.read(8192)
+            chunk = f.read()
             return b'\x00' in chunk
     except OSError:
         return True

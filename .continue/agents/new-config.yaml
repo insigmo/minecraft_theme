@@ -1,0 +1,37 @@
+name: My Config
+version: 1.0.0
+schema: v1
+
+models:
+  # Основная модель — подбери combo-имя из OmniRoute dashboard
+  - name: OmniRoute (Primary)
+    provider: kira
+    model: ki/auto        # или cc/claude-opus-4-6, gc/gemini-2.5-pro и т.д.
+    apiBase: http://localhost:20128/v1
+    apiKey: sk-93fe9418ead9fc64-45aa15-d42a8ab9   # берёшь из Dashboard → API Keys
+    roles:
+      - chat
+      - edit
+      - summarize
+
+
+  # Autocomplete / tab-completion
+  - name: OmniRoute (Autocomplete)
+    provider: kira
+    model: ki/auto   # быстрая и бесплатная модель
+    apiBase: http://localhost:20128/v1
+    apiKey: sk-93fe9418ead9fc64-45aa15-d42a8ab9
+    roles:
+      - autocomplete
+
+context:
+  - provider: file
+  - provider: code
+  - provider: diff
+  - provider: terminal
+  - provider: codebase
+
+rules:
+  - You are an expert Go and Python and kotlin backend developer.
+  - Prefer clean, idiomatic Go code with proper error handling.
+  - When writing SQL, use PostgreSQL syntax.

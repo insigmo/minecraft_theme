@@ -1,12 +1,14 @@
 ================================================================================
-PROJECT DUMP: /Users/user27/.cursor/projects/empty-window/minecraft-jetbrains-theme
+PROJECT DUMP: /Users/user27/git/minecraft_theme
 ================================================================================
 
 FILE TREE:
 --------------------------------------------------------------------------------
-  .DS_Store  [SKIP: ignored filename]
   .dockerignore
+  .gitignore
   Dockerfile
+  LICENSE
+  MUSIC_PLAYLIST.md
   PUBLISHING.md
   README.md
   TESTING.md
@@ -15,10 +17,12 @@ FILE TREE:
   docker-compose.yml
   gradle.properties
   project_dump.txt  [SKIP: ignored filename]
-  project_dumper.py
+  project_dumper.py  [SKIP: ignored filename]
   settings.gradle.kts
-  src/.DS_Store  [SKIP: ignored filename]
-  src/main/.DS_Store  [SKIP: ignored filename]
+  src/main/kotlin/com/github/insigno/emaildefender/plugin/AudioPlayer.kt
+  src/main/kotlin/com/github/insigno/emaildefender/plugin/AudioStateService.kt
+  src/main/kotlin/com/github/insigno/emaildefender/plugin/MuteStatusBarWidget.kt
+  src/main/kotlin/com/github/insigno/emaildefender/plugin/MuteStatusBarWidgetFactory.kt
   src/main/kotlin/dev/minecraft/jetbrains/Constants.kt
   src/main/kotlin/dev/minecraft/jetbrains/FontLoader.kt
   src/main/kotlin/dev/minecraft/jetbrains/audio/AudioEvent.kt
@@ -28,9 +32,7 @@ FILE TREE:
   src/main/kotlin/dev/minecraft/jetbrains/listeners/TabSoundListener.kt
   src/main/kotlin/dev/minecraft/jetbrains/settings/MinecraftAudioConfigurable.kt
   src/main/kotlin/dev/minecraft/jetbrains/statusbar/MuteStatusBarWidgetFactory.kt
-  src/main/resources/.DS_Store  [SKIP: ignored filename]
   src/main/resources/META-INF/plugin.xml
-  src/main/resources/audio/.DS_Store  [SKIP: ignored filename]
   src/main/resources/audio/README.md
   src/main/resources/audio/music/.gitkeep
   src/main/resources/audio/music/background.wav  [SKIP: ignored extension (.wav)]
@@ -42,7 +44,6 @@ FILE TREE:
   src/main/resources/audio/sfx/run-start.wav  [SKIP: ignored extension (.wav)]
   src/main/resources/audio/sfx/run-stop.wav  [SKIP: ignored extension (.wav)]
   src/main/resources/audio/sfx/tab-switch.wav  [SKIP: ignored extension (.wav)]
-  src/main/resources/audio/sfx/tab_switch.wav  [SKIP: ignored extension (.wav)]
   src/main/resources/editor/MinecraftDark.icls
   src/main/resources/fonts/Miracode.ttf  [SKIP: ignored extension (.ttf)]
   src/main/resources/themes/MinecraftDark.theme.json
@@ -63,6 +64,39 @@ dist
 
 
 ================================================================================
+FILE: .gitignore
+LINES: 28 | SIZE: 432 bytes
+================================================================================
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+# Kotlin Gradle plugin data, see https://kotlinlang.org/docs/whatsnew20.html#new-directory-for-kotlin-data-in-gradle-projects
+.kotlin/
+.idea/
+
+================================================================================
 FILE: Dockerfile
 LINES: 10 | SIZE: 325 bytes
 ================================================================================
@@ -75,6 +109,268 @@ COPY . .
 # Build plugin and copy artifact to mounted output volume.
 CMD ["bash", "-lc", "set -euo pipefail; gradle --no-daemon clean buildPlugin; ls -la build/distributions; mkdir -p /out; artifact=$(ls -1 build/distributions/*.zip | head -n 1); cp \"$artifact\" /out/; ls -la /out"]
 
+
+================================================================================
+FILE: LICENSE
+LINES: 202 | SIZE: 11357 bytes
+================================================================================
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+================================================================================
+FILE: MUSIC_PLAYLIST.md
+LINES: 51 | SIZE: 1501 bytes
+================================================================================
+# Music Playlist Feature
+
+## Overview
+
+The plugin now supports sequential music playback. Instead of looping a single track, you can add multiple music files that will play in order.
+
+## How to Use
+
+1. Place your music files in `src/main/resources/audio/music/` with the naming pattern:
+   - `background_1.wav`
+   - `background_2.wav`
+   - `background_3.wav`
+   - etc.
+
+2. The plugin will automatically detect all numbered tracks starting from 1.
+
+3. Tracks play sequentially without gaps: 1 → 2 → 3 → ... → back to 1
+
+## Backward Compatibility
+
+If no numbered tracks are found, the plugin falls back to `background.wav` (legacy single-track mode).
+
+## Example Setup
+
+```
+src/main/resources/audio/music/
+├── background_1.wav  (intro theme)
+├── background_2.wav  (main theme)
+├── background_3.wav  (ambient loop)
+└── background_4.wav  (outro theme)
+```
+
+After track 4 finishes, the playlist loops back to track 1.
+
+## Testing
+
+To test the playlist feature:
+
+1. Add multiple `background_N.wav` files to `src/main/resources/audio/music/`
+2. Build the plugin: `task build`
+3. Install the plugin in your IDE
+4. Enable background music in Settings → Minecraft Theme Audio
+5. The tracks should play in sequence
+
+## Implementation Details
+
+- The playlist is loaded on plugin startup and when music is restarted
+- Track transitions happen automatically when a track finishes
+- Volume settings apply to all tracks
+- Muting stops the current track immediately
+- Unmuting starts from the beginning of the playlist
 
 ================================================================================
 FILE: PUBLISHING.md
@@ -102,7 +398,7 @@ LINES: 20 | SIZE: 512 bytes
 
 ================================================================================
 FILE: README.md
-LINES: 66 | SIZE: 1877 bytes
+LINES: 77 | SIZE: 2332 bytes
 ================================================================================
 # Minecraft Theme & Sounds Plugin
 
@@ -134,7 +430,18 @@ Put your own WAV files into:
 - `src/main/resources/audio/sfx/run-stop.wav`
 - `src/main/resources/audio/sfx/debug-stop.wav`
 - `src/main/resources/audio/sfx/error.wav`
-- `src/main/resources/audio/music/background.wav`
+- `src/main/resources/audio/music/background.wav` (or use playlist format below)
+
+### Music Playlist
+
+The plugin supports sequential music playback. You can add multiple tracks:
+- `src/main/resources/audio/music/background_1.wav`
+- `src/main/resources/audio/music/background_2.wav`
+- `src/main/resources/audio/music/background_3.wav`
+- etc.
+
+Tracks will play in order (1, 2, 3...) and loop back to the first track when finished.
+If no numbered tracks are found, the plugin falls back to `background.wav`.
 
 ## Build
 
@@ -294,180 +601,6 @@ pluginVersion=0.1.0
 
 
 ================================================================================
-FILE: project_dumper.py
-LINES: 169 | SIZE: 5514 bytes
-================================================================================
-#!/usr/bin/env python3
-"""
-Скрипт для сбора содержимого всех файлов проекта в один файл.
-Использование: python dump_project.py [output_file]
-По умолчанию результат записывается в project_dump.txt
-"""
-
-import os
-import sys
-from pathlib import Path
-
-# Директории, которые следует игнорировать
-IGNORED_DIRS = {
-    '.git', '.idea', '.vscode', '__pycache__', 'node_modules',
-    'vendor', 'dist', 'target', '.gradle', '.mvn',
-    'venv', '.venv', 'env', '.env', 'bin', 'obj',
-    '.next', '.nuxt', 'coverage', '.pytest_cache', '.mypy_cache',
-    '.tox', 'htmlcov', '.cache', 'tmp', 'temp',
-}
-
-# Расширения файлов, которые следует игнорировать (бинарные и сгенерированные)
-IGNORED_EXTENSIONS = {
-    # Бинарные
-    '.exe', '.dll', '.so', '.dylib', '.a', '.o', '.obj', '.lib',
-    '.class', '.jar', '.war', '.ear', '.pyc', '.pyo',
-    # Изображения
-    '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.ico', '.svg', '.webp',
-    '.tiff', '.tif', '.raw', '.psd',
-    # Видео и аудио
-    '.mp4', '.avi', '.mov', '.mkv', '.webm', '.mp3', '.wav', '.flac', '.ogg',
-    # Архивы
-    '.zip', '.tar', '.gz', '.bz2', '.xz', '.7z', '.rar',
-    # Документы
-    '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
-    # Шрифты
-    '.ttf', '.otf', '.woff', '.woff2', '.eot',
-    # Прочее
-    '.db', '.sqlite', '.sqlite3', '.lock',
-    '.DS_Store',
-}
-
-# Конкретные файлы, которые следует игнорировать
-IGNORED_FILES = {
-    '.DS_Store', 'Thumbs.db', 'go.sum', 'package-lock.json',
-    'yarn.lock', 'pnpm-lock.yaml', 'Cargo.lock', 'poetry.lock', 'project_dump.txt',
-}
-
-# Максимальный размер файла в байтах (1 МБ)
-MAX_FILE_SIZE = 1024 * 1024
-
-
-def should_skip_dir(dirname: str) -> bool:
-    return dirname in IGNORED_DIRS or dirname.startswith('.')
-
-
-def should_skip_file(filepath: Path) -> tuple[bool, str]:
-    if filepath.name in IGNORED_FILES:
-        return True, "ignored filename"
-    if filepath.suffix.lower() in IGNORED_EXTENSIONS:
-        return True, f"ignored extension ({filepath.suffix})"
-    try:
-        size = filepath.stat().st_size
-        if size > MAX_FILE_SIZE:
-            return True, f"too large ({size} bytes)"
-    except OSError as e:
-        return True, f"stat error: {e}"
-    return False, ""
-
-
-def is_binary(filepath: Path) -> bool:
-    """Проверка, является ли файл бинарным (по наличию нулевых байтов)."""
-    try:
-        with open(filepath, 'rb') as f:
-            chunk = f.read(8192)
-            return b'\x00' in chunk
-    except OSError:
-        return True
-
-
-def dump_project(root: Path, output: Path) -> None:
-    total_files = 0
-    skipped_files = 0
-    total_bytes = 0
-
-    with open(output, 'w', encoding='utf-8') as out:
-        # Заголовок с деревом проекта
-        out.write("=" * 80 + "\n")
-        out.write(f"PROJECT DUMP: {root.resolve()}\n")
-        out.write("=" * 80 + "\n\n")
-
-        # Сбор всех файлов
-        all_files = []
-        for dirpath, dirnames, filenames in os.walk(root):
-            # Фильтрация директорий на месте
-            dirnames[:] = [d for d in dirnames if not should_skip_dir(d)]
-            for filename in filenames:
-                all_files.append(Path(dirpath) / filename)
-
-        all_files.sort()
-
-        # Сначала вывод дерева файлов
-        out.write("FILE TREE:\n")
-        out.write("-" * 80 + "\n")
-        for f in all_files:
-            rel = f.relative_to(root)
-            skip, reason = should_skip_file(f)
-            marker = f"  [SKIP: {reason}]" if skip else ""
-            out.write(f"  {rel}{marker}\n")
-        out.write("\n" + "=" * 80 + "\n\n")
-
-        # Затем содержимое файлов
-        for filepath in all_files:
-            rel = filepath.relative_to(root)
-            skip, reason = should_skip_file(filepath)
-            if skip:
-                skipped_files += 1
-                continue
-
-            if is_binary(filepath):
-                skipped_files += 1
-                out.write(f"\n{'=' * 80}\n")
-                out.write(f"FILE: {rel} [BINARY - SKIPPED]\n")
-                out.write(f"{'=' * 80}\n")
-                continue
-
-            try:
-                with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
-                    content = f.read()
-            except OSError as e:
-                out.write(f"\n{'=' * 80}\n")
-                out.write(f"FILE: {rel} [ERROR: {e}]\n")
-                out.write(f"{'=' * 80}\n")
-                skipped_files += 1
-                continue
-
-            line_count = content.count('\n') + 1
-            out.write(f"\n{'=' * 80}\n")
-            out.write(f"FILE: {rel}\n")
-            out.write(f"LINES: {line_count} | SIZE: {len(content)} bytes\n")
-            out.write(f"{'=' * 80}\n")
-            out.write(content)
-            if not content.endswith('\n'):
-                out.write('\n')
-
-            total_files += 1
-            total_bytes += len(content)
-
-        # Итоговая статистика
-        out.write(f"\n{'=' * 80}\n")
-        out.write("SUMMARY\n")
-        out.write(f"{'=' * 80}\n")
-        out.write(f"Total files dumped: {total_files}\n")
-        out.write(f"Total files skipped: {skipped_files}\n")
-        out.write(f"Total bytes: {total_bytes}\n")
-
-    print(f"✓ Dump saved to: {output}")
-    print(f"  Files dumped:  {total_files}")
-    print(f"  Files skipped: {skipped_files}")
-    print(f"  Total size:    {total_bytes} bytes")
-
-
-def main() -> None:
-    root = Path('.')
-    output = Path(sys.argv[1]) if len(sys.argv) > 1 else Path('project_dump.txt')
-    dump_project(root, output)
-
-
-if __name__ == '__main__':
-    main()
-
-================================================================================
 FILE: settings.gradle.kts
 LINES: 3 | SIZE: 48 bytes
 ================================================================================
@@ -475,8 +608,190 @@ rootProject.name = "minecraft-jetbrains-theme"
 
 
 ================================================================================
+FILE: src/main/kotlin/com/github/insigno/emaildefender/plugin/AudioPlayer.kt
+LINES: 48 | SIZE: 1583 bytes
+================================================================================
+package com.github.insigno.emaildefender.plugin
+
+import com.intellij.openapi.diagnostic.Logger
+import java.io.BufferedInputStream
+import javax.sound.sampled.AudioSystem
+import javax.sound.sampled.Clip
+
+/**
+ * Утилита воспроизведения звука.
+ * Перед любым воспроизведением проверяет флаг AudioStateService.isMuted.
+ *
+ * Использование:
+ *   AudioPlayer.play("/sounds/notification.wav")
+ */
+object AudioPlayer {
+
+    private val LOG = Logger.getInstance(AudioPlayer::class.java)
+
+    /**
+     * @param resourcePath путь к .wav ресурсу внутри jar-файла плагина,
+     *                     например "/sounds/notification.wav"
+     */
+    fun play(resourcePath: String) {
+        if (AudioStateService.getInstance().isMuted) {
+            LOG.debug("AudioPlayer: muted, skipping sound '$resourcePath'")
+            return
+        }
+        try {
+            val stream = AudioPlayer::class.java.getResourceAsStream(resourcePath)
+                ?: run {
+                    LOG.warn("AudioPlayer: resource not found: $resourcePath")
+                    return
+                }
+            val audioStream = AudioSystem.getAudioInputStream(BufferedInputStream(stream))
+            val clip: Clip = AudioSystem.getClip()
+            clip.open(audioStream)
+            clip.addLineListener { event ->
+                if (event.type == javax.sound.sampled.LineEvent.Type.STOP) {
+                    clip.close()
+                }
+            }
+            clip.start()
+        } catch (e: Exception) {
+            LOG.warn("AudioPlayer: failed to play '$resourcePath'", e)
+        }
+    }
+}
+
+================================================================================
+FILE: src/main/kotlin/com/github/insigno/emaildefender/plugin/AudioStateService.kt
+LINES: 37 | SIZE: 1023 bytes
+================================================================================
+package com.github.insigno.emaildefender.plugin
+
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.State
+import com.intellij.openapi.components.Storage
+
+@Service(Service.Level.APP)
+@State(
+    name = "EmailDefenderAudioState",
+    storages = [Storage("emailDefenderAudioState.xml")]
+)
+class AudioStateService : PersistentStateComponent<AudioStateService.State> {
+
+    data class State(var isMuted: Boolean = false)
+
+    private var myState = State()
+
+    var isMuted: Boolean
+        get() = myState.isMuted
+        set(value) {
+            myState.isMuted = value
+        }
+
+    override fun getState(): State = myState
+
+    override fun loadState(state: State) {
+        myState = state
+    }
+
+    companion object {
+        fun getInstance(): AudioStateService =
+            ApplicationManager.getApplication().getService(AudioStateService::class.java)
+    }
+}
+
+================================================================================
+FILE: src/main/kotlin/com/github/insigno/emaildefender/plugin/MuteStatusBarWidget.kt
+LINES: 55 | SIZE: 1628 bytes
+================================================================================
+package com.github.insigno.emaildefender.plugin
+
+import com.intellij.icons.AllIcons
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.wm.StatusBar
+import com.intellij.openapi.wm.StatusBarWidget
+import com.intellij.util.Consumer
+import java.awt.event.MouseEvent
+import javax.swing.Icon
+
+class MuteStatusBarWidget(private val project: Project) :
+    StatusBarWidget, StatusBarWidget.IconPresentation {
+
+    private var statusBar: StatusBar? = null
+
+    companion object {
+        const val WIDGET_ID = "EmailDefenderMuteWidget"
+    }
+
+    override fun ID(): String = WIDGET_ID
+
+    override fun getPresentation(): StatusBarWidget.WidgetPresentation = this
+
+    override fun getIcon(): Icon {
+        return if (AudioStateService.getInstance().isMuted) {
+            AllIcons.Debugger.MuteBreakpoints   // иконка "звук выключен"
+        } else {
+            AllIcons.Debugger.Db_no_suspend_breakpoint  // иконка "звук включён"
+        }
+    }
+
+    override fun getTooltipText(): String {
+        return if (AudioStateService.getInstance().isMuted) {
+            "Plugin audio: MUTED — click to unmute"
+        } else {
+            "Plugin audio: ON — click to mute all plugin sounds"
+        }
+    }
+
+    override fun getClickConsumer(): Consumer<MouseEvent> = Consumer {
+        val service = AudioStateService.getInstance()
+        service.isMuted = !service.isMuted
+        statusBar?.updateWidget(ID())
+    }
+
+    override fun install(statusBar: StatusBar) {
+        this.statusBar = statusBar
+    }
+
+    override fun dispose() {
+        statusBar = null
+    }
+}
+
+================================================================================
+FILE: src/main/kotlin/com/github/insigno/emaildefender/plugin/MuteStatusBarWidgetFactory.kt
+LINES: 26 | SIZE: 817 bytes
+================================================================================
+package com.github.insigno.emaildefender.plugin
+
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.wm.StatusBar
+import com.intellij.openapi.wm.StatusBarWidget
+import com.intellij.openapi.wm.StatusBarWidgetFactory
+
+class MuteStatusBarWidgetFactory : StatusBarWidgetFactory {
+
+    override fun getId(): String = MuteStatusBarWidget.WIDGET_ID
+
+    override fun getDisplayName(): String = "Email Defender Audio Mute"
+
+    override fun isAvailable(project: Project): Boolean = true
+
+    override fun createWidget(project: Project): StatusBarWidget =
+        MuteStatusBarWidget(project)
+
+    override fun disposeWidget(widget: StatusBarWidget) {
+        Disposer.dispose(widget)
+    }
+
+    override fun canBeEnabledOn(statusBar: StatusBar): Boolean = true
+}
+
+================================================================================
 FILE: src/main/kotlin/dev/minecraft/jetbrains/Constants.kt
-LINES: 16 | SIZE: 688 bytes
+LINES: 17 | SIZE: 769 bytes
 ================================================================================
 package dev.minecraft.jetbrains
 
@@ -490,6 +805,7 @@ object Constants {
     const val RUN_STOP_SOUND: String = "/audio/sfx/run-stop.wav"
     const val DEBUG_STOP_SOUND: String = "/audio/sfx/debug-stop.wav"
     const val ERROR_SOUND: String = "/audio/sfx/error.wav"
+    // Поддерживается background.wav и background_1.wav, background_2.wav и т.д.
     const val MUSIC_LOOP: String = "/audio/music/background.wav"
 }
 
@@ -556,7 +872,7 @@ enum class AudioEvent {
 
 ================================================================================
 FILE: src/main/kotlin/dev/minecraft/jetbrains/audio/AudioService.kt
-LINES: 158 | SIZE: 4923 bytes
+LINES: 196 | SIZE: 6189 bytes
 ================================================================================
 package dev.minecraft.jetbrains.audio
 
@@ -575,6 +891,8 @@ class AudioService : Disposable {
     private val settings: AudioSettingsState = AudioSettingsState.getInstance()
     private val muteListeners = CopyOnWriteArrayList<(Boolean) -> Unit>()
     private var musicClip: Clip? = null
+    private var musicPlaylist: List<String> = emptyList()
+    private var currentTrackIndex: Int = 0
 
     init {
         restartMusicIfNeeded()
@@ -639,11 +957,12 @@ class AudioService : Disposable {
     fun restartMusicIfNeeded() {
         stopMusic()
         if (settings.state.muted || !settings.state.musicEnabled) return
-        val musicResource = findFirstAvailableMusicResource() ?: return
-        musicClip = openClip(musicResource, settings.state.musicVolume)?.also { clip ->
-            clip.loop(Clip.LOOP_CONTINUOUSLY)
-            clip.start()
-        }
+
+        musicPlaylist = findAllMusicResources()
+        if (musicPlaylist.isEmpty()) return
+
+        currentTrackIndex = 0
+        playNextTrack()
     }
 
     fun stopMusic() {
@@ -688,12 +1007,47 @@ class AudioService : Disposable {
         }.getOrNull()
     }
 
-    private fun findFirstAvailableMusicResource(): String? {
-        val candidates = listOf(
-            Constants.MUSIC_LOOP,
-            Constants.TAB_SWITCH_SOUND
-        )
-        return candidates.firstOrNull { javaClass.getResource(it) != null }
+    private fun findAllMusicResources(): List<String> {
+        val musicFiles = mutableListOf<String>()
+
+        // Ищем background_1.wav, background_2.wav и т.д.
+        var index = 1
+        while (true) {
+            val path = "/audio/music/background_$index.wav"
+            if (javaClass.getResource(path) != null) {
+                musicFiles.add(path)
+                index++
+            } else {
+                break
+            }
+        }
+
+        // Если не найдены пронумерованные треки, используем background.wav для обратной совместимости
+        if (musicFiles.isEmpty() && javaClass.getResource(Constants.MUSIC_LOOP) != null) {
+            musicFiles.add(Constants.MUSIC_LOOP)
+        }
+
+        return musicFiles
+    }
+
+    private fun playNextTrack() {
+        if (musicPlaylist.isEmpty()) return
+        if (settings.state.muted || !settings.state.musicEnabled) return
+
+        val trackPath = musicPlaylist[currentTrackIndex]
+        musicClip = openClip(trackPath, settings.state.musicVolume)?.also { clip ->
+            clip.addLineListener { event ->
+                if (event.type.toString() == "STOP") {
+                    clip.close()
+                    // Переходим к следующему треку
+                    currentTrackIndex = (currentTrackIndex + 1) % musicPlaylist.size
+                    ApplicationManager.getApplication().executeOnPooledThread {
+                        playNextTrack()
+                    }
+                }
+            }
+            clip.start()
+        }
     }
 
     private fun setClipVolume(clip: Clip, volumePercent: Int) {
@@ -737,8 +1091,8 @@ class AudioSettingsState : PersistentStateComponent<AudioSettingsState.State> {
         var musicEnabled: Boolean = true,
         var runDebugSoundsEnabled: Boolean = true,
         var tabSwitchSoundEnabled: Boolean = true,
-        var soundVolume: Int = 70,
-        var musicVolume: Int = 40
+        var soundVolume: Int = 50,
+        var musicVolume: Int = 50
     )
 
     private var state: State = State()
@@ -950,7 +1304,7 @@ class MinecraftAudioConfigurable : Configurable {
 
 ================================================================================
 FILE: src/main/kotlin/dev/minecraft/jetbrains/statusbar/MuteStatusBarWidgetFactory.kt
-LINES: 69 | SIZE: 2242 bytes
+LINES: 69 | SIZE: 2240 bytes
 ================================================================================
 package dev.minecraft.jetbrains.statusbar
 
@@ -1012,7 +1366,7 @@ private class MuteStatusBarWidget : CustomStatusBarWidget, Disposable {
     override fun getComponent(): JComponent = label
 
     private fun updateLabel(muted: Boolean) {
-        label.text = if (muted) "MC: Muted" else "MC: On"
+        label.text = if (muted) "MC: Off" else "MC: On"
     }
 
     override fun dispose() {
@@ -1023,15 +1377,25 @@ private class MuteStatusBarWidget : CustomStatusBarWidget, Disposable {
 
 ================================================================================
 FILE: src/main/resources/META-INF/plugin.xml
-LINES: 36 | SIZE: 1654 bytes
+LINES: 46 | SIZE: 2027 bytes
 ================================================================================
 <idea-plugin>
     <id>dev.minecraft.jetbrains.minecraft-theme</id>
-    <name>Minecraft Theme &amp; Sounds</name>
-    <vendor email="qwantone@gmail.com">Minecraft JetBrains Theme</vendor>
+    <name>Minecraft Theme</name>
+    <vendor email="qwantone@gmail.com">Qwantone</vendor>
 
     <description>
-        Minecraft-styled theme, sound effects for IDE events, and optional background music with a mute toggle in the status bar.
+        Minecraft-styled dark theme for JetBrains IDEs with immersive sound effects.
+
+        Features:
+        — Minecraft Dark editor color scheme and UI theme
+        — Sound effects for tab switches, Run/Debug start and stop events
+        — Background music loop
+        — Status bar mute toggle (MC On / MC Muted)
+        — Bundled Miracode font — a Minecraft-inspired monospaced font
+
+        All audio settings (volume, enable/disable SFX, music, individual events)
+        are available in Settings → Minecraft Theme Audio.
     </description>
 
     <depends>com.intellij.modules.platform</depends>
@@ -1063,9 +1427,11 @@ LINES: 36 | SIZE: 1654 bytes
 
 ================================================================================
 FILE: src/main/resources/audio/README.md
-LINES: 16 | SIZE: 460 bytes
+LINES: 37 | SIZE: 943 bytes
 ================================================================================
 Place your custom WAV files here.
+
+## Sound Effects
 
 Expected files:
 - `sfx/tab-switch.wav`
@@ -1074,9 +1440,28 @@ Expected files:
 - `sfx/run-stop.wav`
 - `sfx/debug-stop.wav`
 - `sfx/error.wav`
-- `music/background.wav`
 
-Current repository contains placeholder files with these names. Replace them with valid WAV audio keeping the same filenames.
+## Background Music
+
+You can use either a single track or a playlist:
+
+### Single Track (legacy)
+- `music/background.wav` - plays in a continuous loop
+
+### Playlist (recommended)
+- `music/background_1.wav`
+- `music/background_2.wav`
+- `music/background_3.wav`
+- etc.
+
+Tracks will play sequentially (1 → 2 → 3 → ... → 1) without gaps.
+The plugin automatically detects all `background_N.wav` files where N starts from 1.
+
+If no numbered tracks are found, the plugin falls back to `background.wav`.
+
+## Notes
+
+Current repository contains placeholder files. Replace them with valid WAV audio keeping the same filenames.
 
 If files are missing or invalid, the plugin falls back to a system beep for short SFX, and background music stays disabled.
 
@@ -1109,13 +1494,13 @@ LINES: 83 | SIZE: 2386 bytes
     <option name="CONSOLE_FONT_SIZE" value="14" />
 
   <colors>
-    <option name="CARET_ROW_COLOR" value="2b2b2b" />
-    <option name="GUTTER_BACKGROUND" value="2b2b2b" />
+    <option name="CARET_ROW_COLOR" value="252525" />
+    <option name="GUTTER_BACKGROUND" value="1a1a1a" />
     <option name="LINE_NUMBERS_COLOR" value="7a7a7a" />
-    <option name="RIGHT_MARGIN_COLOR" value="3a3a3a" />
+    <option name="RIGHT_MARGIN_COLOR" value="2a2a2a" />
     <option name="SELECTION_BACKGROUND" value="5e8c3a" />
     <option name="SELECTION_FOREGROUND" value="ffffff" />
-    <option name="WHITESPACES" value="3a3a3a" />
+    <option name="WHITESPACES" value="2a2a2a" />
   </colors>
   <attributes>
     <option name="DEFAULT_TEXT">
@@ -1189,12 +1574,12 @@ LINES: 45 | SIZE: 1299 bytes
   "author": "Minecraft JetBrains Theme",
   "dark": true,
   "ui": {
-    "Panel.background": "#2B2B2B",
-    "Tree.background": "#2B2B2B",
-    "ToolWindow.background": "#2B2B2B",
-    "TextField.background": "#3A3A3A",
+    "Panel.background": "#252525",
+    "Tree.background": "#252525",
+    "ToolWindow.background": "#252525",
+    "TextField.background": "#252525",
     "TextField.foreground": "#E6E6E6",
-    "TextField.inactiveBackground": "#333333",
+    "TextField.inactiveBackground": "#282828",
     "TextField.selectionBackground": "#5E8C3A",
     "TextField.selectionForeground": "#FFFFFF",
 
@@ -1217,10 +1602,10 @@ LINES: 45 | SIZE: 1299 bytes
     "ProgressBar.trackColor": "#3A3A3A",
     "ProgressBar.progressColor": "#5E8C3A",
 
-    "StatusBar.background": "#2B2B2B",
+    "StatusBar.background": "#1e1e1e",
     "StatusBar.foreground": "#E0E0E0",
 
-    "Notification.background": "#2F2F2F",
+    "Notification.background": "#252525",
     "Notification.foreground": "#E6E6E6",
     "Notification.errorBackground": "#5A1F1F",
     "Notification.warningBackground": "#5A4A1F",
@@ -1232,6 +1617,6 @@ LINES: 45 | SIZE: 1299 bytes
 ================================================================================
 SUMMARY
 ================================================================================
-Total files dumped: 26
-Total files skipped: 16
-Total bytes: 32965
+Total files dumped: 32
+Total files skipped: 11
+Total bytes: 48448

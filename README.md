@@ -28,7 +28,18 @@ Put your own WAV files into:
 - `src/main/resources/audio/sfx/run-stop.wav`
 - `src/main/resources/audio/sfx/debug-stop.wav`
 - `src/main/resources/audio/sfx/error.wav`
-- `src/main/resources/audio/music/background.wav`
+- `src/main/resources/audio/music/background.wav` (or use playlist format below)
+
+### Music Playlist
+
+The plugin supports sequential music playback. You can add multiple tracks:
+- `src/main/resources/audio/music/background_1.wav`
+- `src/main/resources/audio/music/background_2.wav`
+- `src/main/resources/audio/music/background_3.wav`
+- etc.
+
+Tracks will play in order (1, 2, 3...) and loop back to the first track when finished.
+If no numbered tracks are found, the plugin falls back to `background.wav`.
 
 ## Build
 

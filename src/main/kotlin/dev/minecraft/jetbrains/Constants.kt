@@ -10,6 +10,7 @@ object Constants {
     const val RUN_STOP_SOUND: String = "/audio/sfx/run-stop.wav"
     const val DEBUG_STOP_SOUND: String = "/audio/sfx/debug-stop.wav"
     const val ERROR_SOUND: String = "/audio/sfx/error.wav"
+    // Поддерживается background.wav и background_1.wav, background_2.wav и т.д.
     const val MUSIC_LOOP: String = "/audio/music/background.wav"
 }
 

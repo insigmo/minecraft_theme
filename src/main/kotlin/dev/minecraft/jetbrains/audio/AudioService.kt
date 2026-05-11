@@ -6,6 +6,8 @@ import com.intellij.openapi.components.Service
 import dev.minecraft.jetbrains.Constants
 import java.awt.Toolkit
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import javax.sound.sampled.FloatControl
@@ -15,6 +17,9 @@ class AudioService : Disposable {
     private val settings: AudioSettingsState = AudioSettingsState.getInstance()
     private val muteListeners = CopyOnWriteArrayList<(Boolean) -> Unit>()
     private var musicClip: Clip? = null
+    private var musicPlaylist: List<String> = emptyList()
+    private var currentTrackIndex: Int = 0
+    private val scheduler = Executors.newSingleThreadScheduledExecutor()
 
     init {
         restartMusicIfNeeded()
@@ -79,11 +84,12 @@ class AudioService : Disposable {
     fun restartMusicIfNeeded() {
         stopMusic()
         if (settings.state.muted || !settings.state.musicEnabled) return
-        val musicResource = findFirstAvailableMusicResource() ?: return
-        musicClip = openClip(musicResource, settings.state.musicVolume)?.also { clip ->
-            clip.loop(Clip.LOOP_CONTINUOUSLY)
-            clip.start()
-        }
+
+        musicPlaylist = findAllMusicResources()
+        if (musicPlaylist.isEmpty()) return
+
+        currentTrackIndex = 0
+        playNextTrack()
     }
 
     fun stopMusic() {
@@ -128,12 +134,51 @@ class AudioService : Disposable {
         }.getOrNull()
     }
 
-    private fun findFirstAvailableMusicResource(): String? {
-        val candidates = listOf(
-            Constants.MUSIC_LOOP,
-            Constants.TAB_SWITCH_SOUND
-        )
-        return candidates.firstOrNull { javaClass.getResource(it) != null }
+    private fun findAllMusicResources(): List<String> {
+        val musicFiles = mutableListOf<String>()
+
+        var index = 1
+        while (true) {
+            val path = "/audio/music/background_$index.wav"
+            if (javaClass.getResource(path) != null) {
+                musicFiles.add(path)
+                index++
+            } else {
+                break
+            }
+        }
+
+        if (musicFiles.isEmpty() && javaClass.getResource(Constants.MUSIC_LOOP) != null) {
+            musicFiles.add(Constants.MUSIC_LOOP)
+        }
+
+        return musicFiles
+    }
+
+    private fun playNextTrack() {
+        if (musicPlaylist.isEmpty()) return
+        if (settings.state.muted || !settings.state.musicEnabled) return
+
+        val trackPath = musicPlaylist[currentTrackIndex]
+        musicClip = openClip(trackPath, settings.state.musicVolume)?.also { clip ->
+            clip.addLineListener { event ->
+                if (event.type.toString() == "STOP") {
+                    clip.close()
+                    currentTrackIndex = (currentTrackIndex + 1) % musicPlaylist.size
+                    // Ждём 5 секунд перед следующим треком
+                    scheduler.schedule(
+                        {
+                            ApplicationManager.getApplication().executeOnPooledThread {
+                                playNextTrack()
+                            }
+                        },
+                        5L,
+                        TimeUnit.SECONDS
+                    )
+                }
+            }
+            clip.start()
+        }
     }
 
     private fun setClipVolume(clip: Clip, volumePercent: Int) {
@@ -147,6 +192,7 @@ class AudioService : Disposable {
 
     override fun dispose() {
         stopMusic()
+        scheduler.shutdown()
     }
 
     companion object {
@@ -154,4 +200,3 @@ class AudioService : Disposable {
             ApplicationManager.getApplication().getService(AudioService::class.java)
     }
 }
-
